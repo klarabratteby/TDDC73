@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/styles.xml -->
+<resources>
+    <style name="CustomButtonStyle">
+        <item name="android:textColor">#000000</item> <!-- Text color -->
+        <item name="android:backgroundTint">#D3D3D3</item> <!-- Background color -->
+        <item name="android:padding">16dp</item> <!-- Padding inside button -->
+        <item name="android:textSize">16sp</item> <!-- Text size -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>
+

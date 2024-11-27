@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.sp
 
+//entry point
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainLayout(modifier: Modifier = Modifier) {
     // Column to create 3 sections
+    //top column with header and image
     Column(modifier = modifier.fillMaxSize()) {
         // Header text
         Box(
@@ -52,14 +54,14 @@ fun MainLayout(modifier: Modifier = Modifier) {
             contentAlignment = Alignment.TopStart
         ) {
             Text(
-                text = "Kotlin+compose", // Header text
+                text = "Kotlin+compose",
                 color = Color.White,
-                fontSize = 24.sp, // Make the text larger
+                fontSize = 24.sp,
                 modifier = Modifier.padding(start = 16.dp, top = 15.dp, bottom = 15.dp),
             )
         }
 
-        // Top section with an image
+        // Top section with the image
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,15 +84,16 @@ fun MainLayout(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly // Adjust for button and input spacing
         ) {
+            //Button and email function
             ButtonSection()
             EmailInputField()
         }
 
-        // Bottom section: Empty section to take space
+        // Bottom section (Empty)
         Spacer(modifier = Modifier.weight(1f))
     }
 }
-
+//Defining Button layout
 @Composable
 fun ButtonSection() {
     Column(
@@ -158,7 +161,7 @@ fun ButtonSection() {
         }
     }
 }
-
+//Defining Email input layout
 @Composable
 fun EmailInputField() {
     val email = remember { mutableStateOf(TextFieldValue("")) }
@@ -173,7 +176,7 @@ fun EmailInputField() {
         Text(
             text = "Email",
             color = Color.Gray,
-            modifier = Modifier.padding(end = 8.dp) // Adjust the space between text and input
+            modifier = Modifier.padding(end = 8.dp)
         )
 
         // BasicTextField for email input
@@ -183,7 +186,7 @@ fun EmailInputField() {
             modifier = Modifier
                 .fillMaxWidth()
                 .drawBehind {
-                    // Custom underline for the input field
+                    // Underline for the input field
                     drawLine(
                         color = Color(0xFFD32F2F), // Red underline color
                         start = androidx.compose.ui.geometry.Offset(0f, size.height),

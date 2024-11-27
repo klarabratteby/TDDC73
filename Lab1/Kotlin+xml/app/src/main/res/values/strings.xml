@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">KotlinApp</string>
+    <string name="header_text">Kotlin + XML</string>
+    <string name="button_text">BUTTON</string>
+    <string name="email_label">Email</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="image_description">Decorative image</string>
 </resources>

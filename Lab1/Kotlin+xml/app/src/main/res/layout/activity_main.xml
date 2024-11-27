@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -12,31 +13,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Green Header Section -->
+        <!-- Header Section -->
         <TextView
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#008000"
-            android:text="Kotlin + XML"
+            android:text="@string/header_text"
             android:textColor="#FFFFFF"
             android:gravity="start"
             android:textSize="20sp"
-            android:padding="16dp"/>
+            android:padding="16dp" />
 
         <!-- Top section with image -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="314dp"
                 android:layout_height="142dp"
-                app:srcCompat="@drawable/bild" />
+                app:srcCompat="@drawable/bild"
+                android:contentDescription="@string/image_description" />
         </LinearLayout>
 
         <!-- Middle section with buttons and email input field -->
@@ -56,21 +57,14 @@
 
                 <Button
                     android:id="@+id/button1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BUTTON"
+                    style="@style/CustomButtonStyle"
                     android:layout_marginEnd="60dp"
-                    android:textColor="#000000"
-                    android:backgroundTint="#D3D3D3" />
+                    android:text="@string/button_text" />
 
                 <Button
                     android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BUTTON"
-                    android:textColor="#000000"
-                    android:backgroundTint="#D3D3D3" />
-
+                    style="@style/CustomButtonStyle"
+                    android:text="@string/button_text" />
             </LinearLayout>
 
             <!-- Second row of buttons -->
@@ -83,21 +77,14 @@
 
                 <Button
                     android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BUTTON"
-                    android:textColor="#000000"
+                    style="@style/CustomButtonStyle"
                     android:layout_marginEnd="60dp"
-                    android:backgroundTint="#D3D3D3" />
+                    android:text="@string/button_text" />
 
                 <Button
                     android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BUTTON"
-                    android:textColor="#000000"
-                    android:backgroundTint="#D3D3D3" />
-
+                    style="@style/CustomButtonStyle"
+                    android:text="@string/button_text" />
             </LinearLayout>
 
             <!-- Email input field with red underline -->
@@ -111,41 +98,42 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="@string/email_label"
                     android:textColor="#808080"
                     android:textSize="18sp"
                     android:layout_marginEnd="8dp"
-                    android:paddingStart="16dp"/>  <!-- Padding to the left -->
+                    android:paddingHorizontal="16dp"
+                    android:labelFor="@id/emailInput" />
 
                 <!-- FrameLayout for the EditText and its red underline -->
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_weight="1">
 
                     <!-- EditText with padding and no background -->
                     <EditText
                         android:id="@+id/emailInput"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:inputType="textEmailAddress"
-                        android:padding="16dp"
-                        android:textColor="#000000" />
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:hint="@string/email_hint"
+                        android:autofillHints="emailAddress"
+                        android:imeOptions="actionDone"
+                        tools:ignore="LabelFor" />
 
                     <!-- Red Underline -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_gravity="bottom"
-                        android:background="#FF0000"
-                        android:layout_marginEnd="20dp"/>
+                        android:background="#FF0000" />
                 </FrameLayout>
-
             </LinearLayout>
-
-
         </LinearLayout>
 
         <!-- Bottom section (empty for now) -->
@@ -153,10 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <!-- Leave this section empty -->
-        </LinearLayout>
-
+            android:gravity="center"
+            tools:ignore="UselessLeaf" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
