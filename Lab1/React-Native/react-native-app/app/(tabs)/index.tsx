@@ -4,17 +4,18 @@ import { Image, StyleSheet, View, TextInput, Button, Text } from "react-native";
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+      {/*Header section*/}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Example 1: React Native</Text>
       </View>
-
+      {/*Image section*/}
       <View style={styles.imageContainer}>
         <Image
           source={require("@/assets/images/wheel.png")}
           style={styles.image}
         />
       </View>
-
+      {/*Button section*/}
       <View style={styles.buttonContainer}>
         <View style={styles.buttonRow}>
           <Button title="BUTTON" onPress={() => {}} color="#d6d7d7" />
@@ -25,7 +26,7 @@ export default function HomeScreen() {
           <Button title="BUTTON" onPress={() => {}} color="#d6d7d7" />
         </View>
       </View>
-
+      {/*Email input field*/}
       <View style={styles.inputRow}>
         <Text style={styles.inputLabel}>Email</Text>
         <TextInput
@@ -37,7 +38,7 @@ export default function HomeScreen() {
     </View>
   );
 }
-
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Initializes MyApp widget
 void main() {
   runApp(const MyApp());
 }
 
+// Root widget
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -22,11 +24,13 @@ class MyApp extends StatelessWidget {
           //backgroundColor: Colors.deepPurple, // Set the AppBar background color
         ),
       ),
+      // Setting the home screen of the app
       home: const MyHomePage(title: 'Example 1: Flutter'),
     );
   }
 }
 
+// Home screen widget
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -45,6 +49,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// State class for MyHomePage widget
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -54,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    // Basic material design visual layout
     return Scaffold(
       appBar: AppBar(
           // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -73,9 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 40),
-            _buildButtonRow(),
+            _buildButtonRow(), // Button 1 and Button 2
             const SizedBox(height: 30),
-            _buildButtonRow(),
+            _buildButtonRow(), // Button 3 and Button 4
             const SizedBox(height: 20),
             _buildTextField(),
           ],
@@ -85,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Button styling
 final ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
   foregroundColor: Colors.black87,
   backgroundColor: Colors.grey[300],
@@ -95,6 +102,7 @@ final ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
   ),
 );
 
+// Widget to create a row of two buttons
 Widget _buildButtonRow() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -108,15 +116,18 @@ Widget _buildButtonRow() {
   );
 }
 
+// Widget to create interactive text field
 Widget _buildTextField() {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
     child: Row(
+      // Aligns the label and text field horizontally
       children: [
         const Text(
           'Email',
           style: TextStyle(fontSize: 12, color: Colors.black),
         ),
+        // Spacing between label and input field
         const SizedBox(
           width: 70,
         ),
@@ -125,13 +136,16 @@ Widget _buildTextField() {
           child: TextFormField(
             cursorColor: const Color.fromARGB(255, 203, 10, 75),
             cursorHeight: 16,
+            // Customizes the appearance of the text field
             decoration: const InputDecoration(
+                // Style for the underline when the cursor isnt active
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Color.fromARGB(255, 203, 10, 75),
                     width: 1.8,
                   ),
                 ),
+                // Style for the underline when the cursor is active
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                   color: Color.fromARGB(255, 203, 10, 75),
