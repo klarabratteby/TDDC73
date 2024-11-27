@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header Section -->
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#008000"
+            android:text="@string/header_text"
+            android:textColor="#FFFFFF"
+            android:gravity="start"
+            android:textSize="20sp"
+            android:padding="16dp" />
+
+        <!-- Top section with image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="314dp"
+                android:layout_height="142dp"
+                app:srcCompat="@drawable/bild"
+                android:contentDescription="@string/image_description" />
+        </LinearLayout>
+
+        <!-- Middle section with buttons and email input field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- First row of buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/CustomButtonStyle"
+                    android:layout_marginEnd="60dp"
+                    android:text="@string/button_text" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/CustomButtonStyle"
+                    android:text="@string/button_text" />
+            </LinearLayout>
+
+            <!-- Second row of buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/CustomButtonStyle"
+                    android:layout_marginEnd="60dp"
+                    android:text="@string/button_text" />
+
+                <Button
+                    android:id="@+id/button4"
+                    style="@style/CustomButtonStyle"
+                    android:text="@string/button_text" />
+            </LinearLayout>
+
+            <!-- Email input field with red underline -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_label"
+                    android:textColor="#808080"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:labelFor="@id/emailInput" />
+
+                <!-- FrameLayout for the EditText and its red underline -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_weight="1">
+
+                    <!-- EditText with padding and no background -->
+                    <EditText
+                        android:id="@+id/emailInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:inputType="textEmailAddress"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:hint="@string/email_hint"
+                        android:autofillHints="emailAddress"
+                        android:imeOptions="actionDone"
+                        tools:ignore="LabelFor" />
+
+                    <!-- Red Underline -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_gravity="bottom"
+                        android:background="#FF0000" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Bottom section (empty for now) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:ignore="UselessLeaf" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
