@@ -2,8 +2,6 @@
 
 # dependencies
 node_modules/
-scripts/
-constants/
 
 # Expo
 .expo/
@@ -36,5 +34,3 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-
-app-example
