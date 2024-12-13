@@ -397,6 +397,7 @@ const styles = StyleSheet.create({
   cvvText: {
     fontSize: 18,
     fontWeight: 'bold',
+    transform: [{ scaleX: -1 }],
   },
   form: {
     width: '100%',
