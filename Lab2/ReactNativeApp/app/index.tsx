@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -10,10 +10,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Animated,
+  Easing,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-// Card logos (replace these with your assets)
+// Card logos 
 import visaLogo from '../assets/images/visa.png';
 import amexLogo from '../assets/images/amex.png';
 import mastercardLogo from '../assets/images/mastercard.png';
@@ -30,9 +32,12 @@ const CreditCardForm = () => {
   const [isCardFlipped, setIsCardFlipped] = useState(false);
   const [cardLogo, setCardLogo] = useState(visaLogo);
   const [maxCardLength, setMaxCardLength] = useState(16);
+  const [activeField, setActiveField] = useState('');
+  const flipAnimation = useRef(new Animated.Value(0)).current;
 
+  // Dynamically determine card logo and format
   const getCardLogo = (number: string) => {
-    const plainNumber = number.replace(/\s+/g, ''); 
+    const plainNumber = number.replace(/\s+/g, '');
     if (plainNumber.startsWith('4')) return visaLogo;
     if (plainNumber.startsWith('34') || plainNumber.startsWith('37')) return amexLogo;
     if (plainNumber.startsWith('5')) return mastercardLogo;
@@ -52,6 +57,28 @@ const CreditCardForm = () => {
     }
   }, [cardNumber]);
 
+  // Animation for card flipping
+  useEffect(() => {
+    Animated.timing(flipAnimation, {
+      toValue: isCardFlipped ? 180 : 0,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease),
+    }).start();
+  }, [isCardFlipped]);
+
+  const flipStyle = {
+    transform: [
+      {
+        rotateY: flipAnimation.interpolate({
+          inputRange: [0, 180],
+          outputRange: ['0deg', '180deg'],
+        }),
+      },
+    ],
+  };
+
+  // Format card number with placeholders
   const formatCardNumber = (number: string) => {
     const cleaned = number.replace(/\D+/g, '');
     if (cleaned.startsWith('34') || cleaned.startsWith('37')) {
@@ -61,13 +88,43 @@ const CreditCardForm = () => {
       );
     } else {
       // Default format: 4-4-4-4
-      return cleaned.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+      return cleaned.replace(/(\d{4})(?=\d)/g, '$1 ').padEnd(19, '#');
     }
   };
 
-  const handleCardNumberChange = (number: any) => {
-    const formattedNumber = formatCardNumber(number);
-    setCardNumber(formattedNumber);
+
+  const handleCardNumberChange = (number: string) => {
+    const cleaned = number.replace(/\D+/g, ''); // Remove all non-numeric characters
+    let formattedNumber = '';
+    
+    if (cleaned.startsWith('34') || cleaned.startsWith('37')) {
+      // Amex format: 4-6-5
+      formattedNumber = cleaned.replace(/(\d{4})(\d{0,6})(\d{0,5})/, (match, p1, p2, p3) =>
+        [p1, p2, p3].filter(Boolean).join(' ')
+      );
+      setCardNumber(formattedNumber);
+    } else {
+      // Default format: 4-4-4-4
+      formattedNumber = cleaned.replace(/(\d{4})/g, '$1 ').trim();
+      setCardNumber(formattedNumber);
+    }
+  };
+  const formatCardDisplay = () => {
+    const plainNumber = cardNumber.replace(/\s+/g, '');
+    if (plainNumber.startsWith('34') || plainNumber.startsWith('37')) {
+      // Amex format: 4-6-5
+      return plainNumber
+        .padEnd(15, '#') // Ensure Amex total 15 characters
+        .replace(/(\d{4})(\d{0,6})(\d{0,5})/, (match, p1, p2, p3) =>
+          [p1, p2, p3].filter(Boolean).join(' ')
+        );
+    } else {
+      // Default 4-4-4-4 format
+      return plainNumber
+        .padEnd(16, '#') // Ensure total 16 characters
+        .replace(/(\d{4})(?=\d)/g, '$1 ')
+        .trim();
+    }
   };
 
   const renderMonthPickerItems = () => {
@@ -79,10 +136,52 @@ const CreditCardForm = () => {
 
   const renderYearPickerItems = () => {
     const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // Months are 0-based
+
+    // Determine if the selected month affects year options
+    const isCurrentMonthInPast = parseInt(expiryMonth, 10) < currentMonth;
+
     return Array.from({ length: 10 }, (_, i) => {
-      const year = (currentYear + i).toString().slice(-2);
-      return <Picker.Item key={year} label={year} value={year} />;
-    });
+      const year = currentYear + i;
+
+      // If the selected month is in the past, exclude the current year
+      if (isCurrentMonthInPast && year === currentYear) {
+        return null;
+      }
+
+      return <Picker.Item key={year} label={year.toString().slice(-2)} value={year.toString().slice(-2)} />;
+    }).filter(Boolean); // Remove null values
+  };
+
+  // Validate expiry date
+  const validateExpiryDate = () => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+  
+    // Parse user input
+    const fullExpiryYear = parseInt(`20${expiryYear}`, 10);
+    const expiryMonthInt = parseInt(expiryMonth, 10);
+  
+    // Check if month and year are valid
+    if (
+      !expiryMonthInt || 
+      expiryMonthInt < 1 || 
+      expiryMonthInt > 12 || 
+      !expiryYear || 
+      expiryYear.length !== 2
+    ) {
+      return false; // Invalid month or year
+    }
+  
+    // Validate against current date
+    if (
+      fullExpiryYear > currentYear || 
+      (fullExpiryYear === currentYear && expiryMonthInt >= currentMonth)
+    ) {
+      return true; // Valid future date
+    }
+  
+    return false; // Expired or invalid date
   };
 
   return (
@@ -95,7 +194,7 @@ const CreditCardForm = () => {
         keyboardShouldPersistTaps="handled"
       >
         {/* Credit Card */}
-        <View style={styles.card}>
+        <Animated.View style={[styles.card, flipStyle]}>
           {isCardFlipped ? (
             <ImageBackground
               source={require('../assets/images/6.jpeg')}
@@ -115,76 +214,107 @@ const CreditCardForm = () => {
             >
               <Image source={chipImage} style={styles.chip} />
               <Image source={cardLogo} style={styles.cardLogo} />
-              <Text style={styles.cardNumber}>
-                {cardNumber || '#### #### #### ####'}
+              <Text style={styles.cardNumber} accessibilityLabel={`Card number: ${formatCardDisplay()}`} accessibilityHint="Enter card number.">
+                {formatCardDisplay()} 
               </Text>
               <View style={styles.cardDetails}>
-                <Text style={styles.cardName}>{cardName || 'CARD HOLDER'}</Text>
-                <Text style={styles.cardExpiry}>
+                <Text style={styles.cardName} accessibilityLabel={`Cardholder name: ${cardName || 'Empty'}`} accessibilityHint="Enter cardholder name.">
+                  {cardName || 'CARD HOLDER'}
+                </Text>
+                <Text style={styles.cardExpiry} accessibilityLabel={`Expiry date: ${expiryMonth || 'MM'}/${expiryYear || 'YY'}`} accessibilityHint="Select expiry date.">
                   {(expiryMonth || 'MM') + '/' + (expiryYear || 'YY')}
                 </Text>
               </View>
             </ImageBackground>
           )}
-        </View>
+        </Animated.View>
 
         {/* Form */}
         <View style={styles.form}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, activeField === 'cardNumber' && styles.activeInput]}
             placeholder="Card Number"
             value={cardNumber}
             onChangeText={handleCardNumberChange}
             keyboardType="numeric"
             maxLength={maxCardLength}
+            accessibilityLabel="Card number input"
+            accessibilityHint="Input the card number."
+            onFocus={() => setActiveField('cardNumber')}
+            onBlur={() => setActiveField('')}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, activeField === 'cardName' && styles.activeInput]}
             placeholder="Card Name"
             value={cardName}
             onChangeText={(text) => setCardName(text.toUpperCase())}
+            accessibilityLabel="Cardholder name input"
+            accessibilityHint="Input the cardholder's name."
+            onFocus={() => setActiveField('cardName')}
+            onBlur={() => setActiveField('')}
           />
           <View style={styles.expiryCvvRow}>
-            <View style={[styles.input, styles.expiryPicker]}>
+            <View style={[styles.input, styles.expiryPicker, activeField === 'expiryMonth' && styles.activeInput]}>
               <Picker
                 selectedValue={expiryMonth}
                 onValueChange={(value) => {
                   setExpiryMonth(value);
                 }}
+                accessibilityLabel="Expiry month picker"
+                accessibilityHint="Select expiry month."
+                onFocus={() => setActiveField('expiryMonth')}
+                onBlur={() => setActiveField('')}
               >
                 <Picker.Item label="MM" value="" />
                 {renderMonthPickerItems()}
               </Picker>
-              {expiryMonth && (
-                <Text style={styles.expiryInputText}>{expiryMonth}</Text>
-              )}
             </View>
-            <View style={[styles.input, styles.expiryPicker]}>
+            <View style={[styles.input, styles.expiryPicker, activeField === 'expiryYear' && styles.activeInput]}>
               <Picker
                 selectedValue={expiryYear}
                 onValueChange={(value) => {
                   setExpiryYear(value);
                 }}
+                accessibilityLabel="Expiry year picker"
+                accessibilityHint="Select expiry year."
+                onFocus={() => setActiveField('expiryYear')}
+                onBlur={() => setActiveField('')}
               >
                 <Picker.Item label="YY" value="" />
                 {renderYearPickerItems()}
               </Picker>
-              {expiryYear && (
-                <Text style={styles.expiryInputText}>{expiryYear}</Text>
-              )}
             </View>
             <TextInput
-              style={[styles.input, styles.cvvInput]}
+              style={[styles.input, styles.cvvInput, activeField === 'cvv' && styles.activeInput]}
               placeholder="CVV"
               value={cvv}
               onChangeText={setCvv}
               keyboardType="numeric"
               maxLength={3}
-              onFocus={() => setIsCardFlipped(true)}
-              onBlur={() => setIsCardFlipped(false)}
+              onFocus={() => {
+                setIsCardFlipped(true);
+                setActiveField('cvv');
+              }}
+              onBlur={() => {
+                setIsCardFlipped(false);
+                setActiveField('');
+              }}
+              accessibilityLabel="CVV input"
+              accessibilityHint="Input the card's CVV number."
             />
           </View>
-          <TouchableOpacity style={styles.submitButton}>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!validateExpiryDate()) {
+                alert('Invalid expiry date.');
+              } else {
+                alert('Form submitted successfully.');
+              }
+            }}
+            accessibilityLabel="Submit button"
+            accessibilityHint="Submit the form."
+          >
             <Text style={styles.submitText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -196,7 +326,7 @@ const CreditCardForm = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#D3D3D3', 
+    backgroundColor: '#D3D3D3',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -262,6 +392,7 @@ const styles = StyleSheet.create({
   cvvLabel: {
     fontSize: 12,
     color: '#555',
+    transform: [{ scaleX: -1 }],
   },
   cvvText: {
     fontSize: 18,
@@ -280,6 +411,10 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
     zIndex: 0,
+  },
+  activeInput: {
+    borderColor: '#007AFF', 
+    borderWidth: 2,
   },
   input: {
     height: 50,
