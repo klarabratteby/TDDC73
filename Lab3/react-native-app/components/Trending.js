@@ -55,7 +55,6 @@ export default function Trending({ lang, years, months, days }) {
     variables: { query: `language:${lang} sort:stars-desc` },
   });
 
-  // Debugging logs
   useEffect(() => {}, [loading, error, data, lang]);
 
   // Refetch query when `lang` changes

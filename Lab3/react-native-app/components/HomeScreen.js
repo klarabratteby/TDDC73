@@ -7,8 +7,10 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 // Initialize apollo client
 const client = new ApolloClient({
+  // endpoint
   uri: "https://api.github.com/graphql",
   cache: new InMemoryCache(),
+  // personal access token
   headers: {
     authorization: `Bearer ${process.env.TOKEN_KEY}`,
   },
